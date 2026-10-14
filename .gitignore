@@ -1,0 +1,41 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Testing & Quality Gates
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Virtual Environments
+.venv/
+venv/
+ENV/
+
+# LaTeX auxiliary compilation files (preserves .tex and final .pdf)
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.fdb_latexmk
+*.fls
+
+# IDE & Editor files
+.vscode/
+.idea/
+
+# Environment variables & local secrets
+.env
+.env.local
+*.key
+*.pem
+
+# Local scratch scripts
+comparar_wifi.ps1
+
+# OS generated files
+Thumbs.db
+Desktop.ini
+.DS_Store
