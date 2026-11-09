@@ -31,9 +31,11 @@ En 2026, los "wrappers" de IA y los bucles descontrolados `while True` que invoc
 ## 3. Especificación de Requisitos Formales (EARS)
 
 ### Ubiquitous Requirements (Invariantes Universales)
-- **EARS-U1 (Oráculo Determinista):** El sistema SIEMPRE utilizará el código de salida del ejecutor de tests (pytest) como única fuente de verdad para el éxito de una implementación, ignorando cualquier aseveración verbal del LLM.
-- **EARS-U2 (Circuit Breakers):** El sistema SIEMPRE abortará la ejecución y entrará en modo seguro si una tarea supera los 8 pasos de auto-corrección, consume más de $0.25 USD o ejecuta la misma llamada a herramienta con argumentos idénticos por segunda vez consecutiva (detección de oscilación por hash).
-- **EARS-U3 (Aislamiento de Entorno):** El sistema SIEMPRE ejecutará las modificaciones de código y pruebas dentro de un sandbox aislado o directorio acotado, impidiendo la alteración de ramas principales sin aprobación.
+- **EARS-U1 (Oráculo Determinista):** El sistema SIEMPRE utilizará el código de salida del ejecutor de tests (`pytest`) como única fuente de verdad para el éxito de una implementación, ignorando cualquier aseveración verbal del LLM.
+- **EARS-U2 (Circuit Breakers Anti-Loop):** El sistema SIEMPRE abortará la ejecución y entrará en modo seguro si una tarea supera los 8 pasos de auto-corrección (`TRIPPED_STEPS`), consume más de \$0.25 USD (`TRIPPED_COST`) o ejecuta la misma llamada a herramienta con argumentos idénticos por segunda vez consecutiva (`TRIPPED_OSCILLATION` vía hash `SHA-256`).
+- **EARS-U3 (Inmutabilidad del Oráculo / Test Tampering Guard):** El sistema SIEMPRE bloqueará criptográficamente (`SHA-256`) los tests creados en la Fase Roja y disparará `TRIPPED_TEST_TAMPERING` si el agente codificador intenta modificar o eliminar cualquier archivo de prueba durante la Fase Verde.
+- **EARS-U4 (Presupuesto de Vertical Slice / Blast-Radius Guard):** El sistema SIEMPRE aplicará límites de Vertical Slice por paso ($\le 3$ archivos y $\le 100$ líneas de diff) y disparará `TRIPPED_BLAST_RADIUS` ante intentos de escritura monolítica.
+- **EARS-U5 (Aislamiento de Entorno):** El sistema SIEMPRE ejecutará las modificaciones de código y pruebas dentro de un sandbox aislado o directorio acotado, impidiendo la alteración de ramas principales sin aprobación.
 
 ### Event-Driven Requirements
 - **EARS-E1 (Inyección de Error en Lazo Cerrado):** CUANDO el oráculo de pruebas falle (`exit_code != 0`), el sistema DEBERÁ capturar el stacktrace y el diff relevante, sanitizarlos de tokens redundantes e inyectarlos como observación correctiva al agente codificador.
