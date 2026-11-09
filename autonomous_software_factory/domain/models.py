@@ -27,6 +27,8 @@ class CircuitStatus(str, Enum):
     TRIPPED_OSCILLATION = "tripped_oscillation"
     TRIPPED_COST = "tripped_cost"
     TRIPPED_STEPS = "tripped_steps"
+    TRIPPED_TEST_TAMPERING = "tripped_test_tampering"
+    TRIPPED_BLAST_RADIUS = "tripped_blast_radius"
     ESCALATED = "escalated"
 
 

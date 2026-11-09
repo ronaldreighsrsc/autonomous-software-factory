@@ -6,7 +6,7 @@
 [![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
 [![Pydantic v2](https://img.shields.io/badge/data_contracts-pydantic_v2-e92063.svg?style=flat-square&logo=pydantic&logoColor=white)](https://docs.pydantic.dev/)
 [![SQLite WAL](https://img.shields.io/badge/storage-SQLite_WAL-003B57.svg?style=flat-square&logo=sqlite&logoColor=white)](https://www.sqlite.org/wal.html)
-[![Tests Passing](https://img.shields.io/badge/tests-29%20passed%20(100%25)-success.svg?style=flat-square&logo=pytest&logoColor=white)](https://pytest.org/)
+[![Tests Passing](https://img.shields.io/badge/tests-31%20passed%20(100%25)-success.svg?style=flat-square&logo=pytest&logoColor=white)](https://pytest.org/)
 [![Control Theory](https://img.shields.io/badge/architecture-Closed--Loop_FSM-7928CA.svg?style=flat-square)](https://github.com/ronaldreighsrsc/autonomous-software-factory)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg?style=flat-square)](LICENSE)
 
@@ -29,8 +29,11 @@ In 2026, naive LLM "wrappers" and unconstrained `while True` loops calling gener
 **`autonomous-software-factory`** is an industrial-grade agentic engine built on **Classical Closed-Loop Control Theory**:
 
 1. **Deterministic Truth Oracle:** External subprocesses (`pytest`, `mypy`, `ruff`) serve as the sole source of truth. Verbal assertions by LLM agents are strictly ignored; task completion is strictly mathematical (`exit_code == 0`).
-2. **Typed StateGraph Engine:** A finite state machine (FSM) enforcing transition contracts, Human-in-the-Loop gates, and automated Fast-Path routing.
-3. **Loop Budgeting & Circuit Breakers:** Hardware-inspired breakers trip automatically on SHA-256 action oscillations (identical consecutive tool calls), exceeding step budgets (max 8 iterations), or cost thresholds (max $0.25 USD).
+2. **Typed StateGraph Engine (Vertical Slices & `/pair` Semaphore):** A finite state machine (FSM) enforcing Vertical Slice decomposition, Human-in-the-Loop gates, and automated Fast-Path routing.
+3. **5-Guard Circuit Breakers (The 3 Navigator Alarms):** Hardware-inspired breakers trip automatically on:
+   - **Anti-Loop:** SHA-256 action oscillations (`TRIPPED_OSCILLATION`), step limits (max 8 iterations, `TRIPPED_STEPS`), or cost thresholds (max \$0.25 USD, `TRIPPED_COST`).
+   - **Anti-Test-Tampering (`TRIPPED_TEST_TAMPERING`):** Cryptographically locks Red-phase test files via SHA-256 so the Green/Fixer agent cannot modify or delete tests to fake a passing exit code.
+   - **Vertical Slice Blast-Radius (`TRIPPED_BLAST_RADIUS`):** Enforces small, auditable steps ($\le 3$ files and $\le 100$ diff lines per step), preventing 3,000-line monolithic AI code dumps.
 4. **Time-Travel Checkpointing:** ACID transactional snapshots persisted via **SQLite WAL** (`Write-Ahead Logging`), enabling deterministic rollbacks and state inspection.
 
 ---
@@ -117,8 +120,9 @@ restored_snapshot = checkpointer.rollback_to("snap-step1")
 | Requirement ID | Type | Description |
 | :--- | :--- | :--- |
 | **EARS-U1** | Ubiquitous | The system **SHALL ALWAYS** use the external test runner exit code (`exit_code == 0`) as the single source of truth, ignoring any verbal success claims by LLM agents. |
-| **EARS-U2** | Ubiquitous | The system **SHALL ALWAYS** abort execution and enter safe state if a task exceeds 8 auto-correction steps, consumes >$0.25 USD, or repeats an identical tool call consecutively. |
-| **EARS-U3** | Ubiquitous | The system **SHALL ALWAYS** execute code modifications and test executions in an isolated, sandboxed environment. |
+| **EARS-U2** | Ubiquitous | The system **SHALL ALWAYS** abort execution and enter safe state if a task exceeds 8 auto-correction steps, consumes >\$0.25 USD, or repeats an identical tool call consecutively. |
+| **EARS-U3** | Ubiquitous | The system **SHALL ALWAYS** cryptographically lock Red-phase tests (SHA-256) and trip `TRIPPED_TEST_TAMPERING` if the Green/Fixer agent attempts to alter or delete any test file. |
+| **EARS-U4** | Ubiquitous | The system **SHALL ALWAYS** enforce Vertical Slice step limits ($\le 3$ files, $\le 100$ diff lines per step) and trip `TRIPPED_BLAST_RADIUS` on monolithic code dumps. |
 | **EARS-E1** | Event-Driven | **WHEN** the test oracle fails (`exit_code != 0`), the system **SHALL** capture only the failure diff and stacktrace, strip environmental noise, and inject clean observations to the coder. |
 | **EARS-E2** | Event-Driven | **WHEN** an architectural checkpoint is reached (Gate 1), the system **SHALL** suspend the state machine, persist state in SQLite WAL, and await human authorization. |
 | **EARS-S1** | State-Driven | **WHILE** a task is cosmetic/bugfix (`FAST_PATH`), the system **SHALL** route directly to single-agent TDD; **WHILE** a task introduces schema changes, it **SHALL** run the full 4-agent pipeline. |
@@ -184,12 +188,12 @@ The codebase is engineered strictly via **Test-Driven Development (TDD)** with 1
 py -m pytest tests -q
 ```
 ```text
-.............................                                            [100%]
-29 passed in 1.49s
+...............................                                          [100%]
+31 passed in 1.49s
 ```
 
 * **Domain & Pydantic v2 Contracts:** 4 unit tests (`test_domain_models.py`)
-* **Circuit Breakers & Anti-Oscillation:** 4 unit tests (`test_circuit_breaker.py`)
+* **Circuit Breakers, Test-Tampering & Blast-Radius Guards:** 6 unit tests (`test_circuit_breaker.py`)
 * **Deterministic Oracle & Reflexion:** 3 unit tests (`test_oracle.py`)
 * **StateGraph Finite State Machine:** 6 unit tests (`test_state_engine.py`)
 * **SQLite WAL & Time-Travel Debugging:** 4 unit tests (`test_checkpoint_service.py`)
