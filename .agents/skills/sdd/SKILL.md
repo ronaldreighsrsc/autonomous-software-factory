@@ -88,3 +88,11 @@ Una sola tarea / iteración a la vez (máximo ~50-80 líneas y $\le 3$ archivos 
 2. 🟢 **VERDE (Código mínimo):** Escribe la **cantidad mínima de código** necesaria para que el test pase. Cero funcionalidades no pedidas, cero abstracciones anticipadas.
 3. 🔵 **REFACTOR (Solo en verde):** Si el código creció o hay duplicación real, aplica o propone un refactor manteniendo el 100% de `py -m pytest` en verde.
 4. Marcar la tarea completada (`[x]`) en `tasks.md` y **PARAR** para revisión del Navigator (nunca generar PRs monolíticos de miles de líneas sin pausa).
+
+## 📚 Orquestación Automática de Comandos y Referencias (Carga Progresiva)
+- **La skill `sdd` NO necesita ser llamada con `/`:** se activa sola automáticamente cuando el usuario pide una nueva capacidad (Nivel 2 SDD en `AGENTS.md`), toca `specs/` o `docs/constitution.md`, o escribe un atajo `/sdd-*`.
+- **La skill `sdd` es la que llama y encadena los comandos:** una vez activa, dirige el flujo completo ejecutando en secuencia los 9 comandos/runbooks (`constitution` → `spec` → `clarify` → **[PAUSA Navigator]** → `plan` → `tasks` → **[PAUSA Navigator]** → `implement` 1 tarea a la vez en `/pair` → `validate` RF por RF, o `change` / `status`):
+  - **[Runbooks por Fase SDD (`sdd-*`)](./references/runbooks_fases_sdd.md):** Procedimientos exactos de los 9 comandos (`constitution`, `spec`, `clarify`, `plan`, `tasks`, `implement`, `validate`, `change`, `status`).
+  - **[Roles y Checklists SDD](./references/roles_y_checklists_sdd.md):** Protocolos de Planificador (`@planner`), Implementador (`@implementer` `/pair`), Revisor/QA (`@reviewer` + Guardrails Invariantes + formato `VEREDICTO`) y compuertas de coordinación.
+
+> **Nota multi-herramienta:** En **OpenCode / Claude Code**, los archivos en `.agents/commands/sdd-*.md` y `.agents/agents/*.md` (o `.claude/`) permiten también disparar comandos sueltos y subagentes. En **Google Antigravity**, esta skill (`SKILL.md` + `references/`) contiene y ejecuta directamente todos esos comandos y roles mediante carga progresiva.

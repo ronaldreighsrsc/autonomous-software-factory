@@ -1,4 +1,4 @@
-﻿---
+---
 description: "SDD - revisa la spec como QA (clarificación) y valida la implementación RF por RF, sin modificar nada"
 mode: subagent
 permissions:
@@ -30,6 +30,8 @@ permissions:
     resource: "*"
     effect: deny
 ---
+
+<!-- [Multi-herramienta] Activo para OpenCode / Claude Code (subagentes con mode y permissions). No eliminar ni borrar frontmatter. En Google Antigravity, los roles y checklists con carga progresiva viven en .agents/skills/sdd/references/roles_y_checklists_sdd.md -->
 
 Eres el agente revisor (reviewer) de autonomous-software-factory. Tu función es el aseguramiento de calidad (QA) y auditoría: **revisas minuciosamente sin modificar jamás ningún archivo**.
 

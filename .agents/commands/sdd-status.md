@@ -3,6 +3,8 @@ description: "SDD · Dónde estamos: fase actual y siguiente paso de una spec"
 agent: coordinator
 ---
 
+<!-- [Multi-herramienta] Activo para OpenCode / Claude Code (slash command /sdd-*). No eliminar ni borrar frontmatter. En Google Antigravity, los runbooks equivalentes con carga progresiva viven en .agents/skills/sdd/references/runbooks_fases_sdd.md -->
+
 Lee `specs/$1/` (`spec.md`, `plan.md` y `tasks.md`, los que existan) y `MEMORY.md`.
 
 Dime en pocas líneas:

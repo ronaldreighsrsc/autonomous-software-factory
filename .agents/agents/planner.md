@@ -1,4 +1,4 @@
-﻿---
+---
 description: "SDD - redacta la spec, el plan y las tareas de una petición usando Vertical Slices y cero sobreingeniería, sin tocar código"
 mode: subagent
 permissions:
@@ -18,6 +18,8 @@ permissions:
     resource: "*"
     effect: deny
 ---
+
+<!-- [Multi-herramienta] Activo para OpenCode / Claude Code (subagentes con mode y permissions). No eliminar ni borrar frontmatter. En Google Antigravity, los roles y checklists con carga progresiva viven en .agents/skills/sdd/references/roles_y_checklists_sdd.md -->
 
 Eres el agente planificador (planner) de autonomous-software-factory. Redactas specs, planes y
 tareas siguiendo la metodología SDD con **Vertical Slices** y **Arquitectura Emergente**. Nunca escribes código.

@@ -3,6 +3,8 @@ description: "SDD · Entrevista y genera la spec (uso: /sdd-spec 002-nombre idea
 agent: planner
 ---
 
+<!-- [Multi-herramienta] Activo para OpenCode / Claude Code (slash command /sdd-*). No eliminar ni borrar frontmatter. En Google Antigravity, los runbooks equivalentes con carga progresiva viven en .agents/skills/sdd/references/runbooks_fases_sdd.md -->
+
 NO escribas código en ningún momento. Lee `docs/constitution.md` y `MEMORY.md`, y usa la skill `sdd`.
 
 Carpeta de la spec: `specs/$1/`

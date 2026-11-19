@@ -3,6 +3,8 @@ description: "SDD · Genera el plan técnico mínimo de una spec aprobada (Verti
 agent: planner
 ---
 
+<!-- [Multi-herramienta] Activo para OpenCode / Claude Code (slash command /sdd-*). No eliminar ni borrar frontmatter. En Google Antigravity, los runbooks equivalentes con carga progresiva viven en .agents/skills/sdd/references/runbooks_fases_sdd.md -->
+
 Lee `docs/constitution.md`, `AGENTS.md` y `specs/$1/spec.md`. Usa la skill `sdd`.
 
 NO escribas código.

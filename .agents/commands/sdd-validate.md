@@ -3,6 +3,8 @@ description: "SDD · Valida la spec RF por RF (tests + Chrome DevTools / CLI)"
 agent: reviewer
 ---
 
+<!-- [Multi-herramienta] Activo para OpenCode / Claude Code (slash command /sdd-*). No eliminar ni borrar frontmatter. En Google Antigravity, los runbooks equivalentes con carga progresiva viven en .agents/skills/sdd/references/runbooks_fases_sdd.md -->
+
 Recorre `specs/$1/spec.md` requisito por requisito. Para cada RF indica qué test lo cubre y el resultado de ejecutarlo con `py -m pytest`.
 
 Los RF de interfaz o conectores web que no se puedan testear con pruebas unitarias, verifícalos ejecutando la CLI o mediante el MCP de Chrome DevTools (puerto 9222).

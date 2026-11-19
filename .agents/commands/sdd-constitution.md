@@ -3,6 +3,8 @@ description: "SDD · Propone la constitución del proyecto (principios innegocia
 agent: planner
 ---
 
+<!-- [Multi-herramienta] Activo para OpenCode / Claude Code (slash command /sdd-*). No eliminar ni borrar frontmatter. En Google Antigravity, los runbooks equivalentes con carga progresiva viven en .agents/skills/sdd/references/runbooks_fases_sdd.md -->
+
 Vamos a crear (o revisar, si ya existe) `docs/constitution.md`. Usa la skill `sdd`.
 
 Antes de proponer nada, lee `AGENTS.md`, `MEMORY.md` y el código del proyecto.

@@ -3,6 +3,8 @@ description: "SDD · Nuevo requisito: primero la spec, luego el código"
 agent: planner
 ---
 
+<!-- [Multi-herramienta] Activo para OpenCode / Claude Code (slash command /sdd-*). No eliminar ni borrar frontmatter. En Google Antigravity, los runbooks equivalentes con carga progresiva viven en .agents/skills/sdd/references/runbooks_fases_sdd.md -->
+
 Nuevo requisito para la spec `specs/$1/` (el texto que va después del nombre de la carpeta): $ARGUMENTS
 
 **NO toques código.** Usa la skill `sdd`.

@@ -1,4 +1,4 @@
-﻿# 🤖 AGENTS.md — Reglas y Guardrails de autonomous-software-factory
+# 🤖 AGENTS.md — Reglas y Guardrails de autonomous-software-factory
 
 ## 🛠️ Stack y Verificación
 - **Stack:** Python 3.12+, Clean Architecture Emergente, Pytest.

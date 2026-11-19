@@ -3,6 +3,8 @@ description: "SDD /pair · Implementa UNA tarea en Modo Semáforo (Rojo -> Verde
 agent: implementer
 ---
 
+<!-- [Multi-herramienta] Activo para OpenCode / Claude Code (slash command /sdd-*). No eliminar ni borrar frontmatter. En Google Antigravity, los runbooks equivalentes con carga progresiva viven en .agents/skills/sdd/references/runbooks_fases_sdd.md -->
+
 Implementa **SOLO** la tarea $2 de `specs/$1/tasks.md` en **Modo Semáforo (`/pair`)**, siguiendo `specs/$1/plan.md`, `docs/constitution.md` y la skill `sdd`:
 
 1. 🔴 **ROJO:** Escribe primero el test del comportamiento y comprueba que falla por el motivo esperado. Prohibido modificar o borrar tests existentes para hacer trampa.

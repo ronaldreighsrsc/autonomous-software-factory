@@ -3,6 +3,8 @@ description: "SDD · Divide el plan en tareas verticales pequeñas y verificable
 agent: planner
 ---
 
+<!-- [Multi-herramienta] Activo para OpenCode / Claude Code (slash command /sdd-*). No eliminar ni borrar frontmatter. En Google Antigravity, los runbooks equivalentes con carga progresiva viven en .agents/skills/sdd/references/runbooks_fases_sdd.md -->
+
 A partir de `specs/$1/spec.md` y `specs/$1/plan.md`, genera `specs/$1/tasks.md` siguiendo el formato de la skill `sdd`:
 - **PROHIBIDO dividir por capas horizontales** (ej. "1. toda la base de datos, 2. toda la API, 3. toda la UI").
 - Cada tarea debe ser un incremento / **Vertical Slice** pequeño (máx. 15-25 min y máx. 3 archivos cada una), verificable de extremo a extremo.

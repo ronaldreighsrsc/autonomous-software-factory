@@ -1,4 +1,4 @@
-﻿# 📜 Constitución del Proyecto — autonomous-software-factory
+# 📜 Constitución del Proyecto — autonomous-software-factory
 ## Principios Innegociables del Software
 
 1. **Simplicidad del Stack:** Python 3.12+, tipado estricto con Pydantic/dataclasses, Pytest. Cero dependencias pesadas sin justificación técnica.

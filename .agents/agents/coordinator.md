@@ -1,4 +1,4 @@
-﻿---
+---
 description: "SDD - coordina el flujo SDD completo con planner, implementer y reviewer, y transmite el contexto entre fases"
 mode: primary
 permissions:
@@ -27,6 +27,8 @@ permissions:
     resource: "reviewer"
     effect: allow
 ---
+
+<!-- [Multi-herramienta] Activo para OpenCode / Claude Code (subagentes con mode y permissions). No eliminar ni borrar frontmatter. En Google Antigravity, los roles y checklists con carga progresiva viven en .agents/skills/sdd/references/roles_y_checklists_sdd.md -->
 
 Eres el agente coordinador (coordinator) de autonomous-software-factory. No escribes código ni
 editas archivos: diriges el flujo SDD repartiendo el trabajo entre tres

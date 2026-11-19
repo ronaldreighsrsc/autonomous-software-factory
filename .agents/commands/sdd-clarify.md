@@ -3,6 +3,8 @@ description: "SDD · Revisa la spec como un QA (solo detecta, no resuelve)"
 agent: reviewer
 ---
 
+<!-- [Multi-herramienta] Activo para OpenCode / Claude Code (slash command /sdd-*). No eliminar ni borrar frontmatter. En Google Antigravity, los runbooks equivalentes con carga progresiva viven en .agents/skills/sdd/references/runbooks_fases_sdd.md -->
+
 Revisa `specs/$1/spec.md` como si fueras un QA muy profesional. Usa la skill `sdd`.
 
 Lista:
