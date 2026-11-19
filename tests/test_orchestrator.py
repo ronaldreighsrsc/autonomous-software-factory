@@ -142,3 +142,128 @@ def test_orchestrator_halts_on_oscillation(tmp_path):
     assert report["is_success"] is False
     assert report["final_phase"] == StatePhase.ABORTED
     assert report["circuit_status"] == CircuitStatus.TRIPPED_OSCILLATION
+
+
+def test_antigravity_worker_live_sdk_step_streams_thoughts_and_tool_calls_through_circuit_breaker(monkeypatch):
+    from autonomous_software_factory.engines.circuit_breaker import CircuitBreaker
+
+    class FakeToolCall:
+        def __init__(self, name, args):
+            self.name = name
+            self.args = args
+
+    class FakeResponse:
+        def __init__(self, thoughts_list, calls_list):
+            self._thoughts = thoughts_list
+            self._calls = calls_list
+
+        @property
+        def thoughts(self):
+            async def _gen():
+                for t in self._thoughts:
+                    yield t
+            return _gen()
+
+        @property
+        def tool_calls(self):
+            async def _gen():
+                for c in self._calls:
+                    yield c
+            return _gen()
+
+        def __aiter__(self):
+            async def _gen():
+                yield "Patch applied"
+            return _gen()
+
+    class FakeAgent:
+        def __init__(self, config):
+            self.config = config
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            return False
+
+        async def chat(self, prompt: str):
+            return FakeResponse(
+                thoughts_list=["Analyzing stacktrace", "Writing minimal green patch"],
+                calls_list=[FakeToolCall("edit_file", {"file": "calc.py", "line": 10})],
+            )
+
+    import google.antigravity as agy
+    monkeypatch.setattr(agy, "Agent", FakeAgent)
+
+    cb = CircuitBreaker(max_steps=8, max_cost_usd=0.25)
+    worker = AntigravityWorkerAdapter(role="Coder")
+    result = worker.execute_live_sdk_step(
+        prompt="Fix margin formula",
+        circuit_breaker=cb,
+        api_key="AIzaFakeKey123",
+    )
+
+    assert result["status"] == "live_sdk_step_executed"
+    assert len(cb.thoughts) == 2
+    assert cb.tracker.current_steps == 1
+    assert result["tool_calls_count"] == 1
+
+
+def test_antigravity_worker_live_sdk_step_trips_oscillation_on_duplicate_sdk_tool_call(monkeypatch):
+    from autonomous_software_factory.engines.circuit_breaker import (
+        CircuitBreaker,
+        CircuitBreakerTrippedError,
+    )
+
+    class FakeToolCall:
+        def __init__(self, name, args):
+            self.name = name
+            self.args = args
+
+    class FakeResponse:
+        @property
+        def thoughts(self):
+            async def _gen():
+                yield "Repeating same broken patch"
+            return _gen()
+
+        @property
+        def tool_calls(self):
+            async def _gen():
+                yield FakeToolCall("edit_file", {"file": "calc.py", "patch": "same"})
+                yield FakeToolCall("edit_file", {"file": "calc.py", "patch": "same"})
+            return _gen()
+
+        def __aiter__(self):
+            async def _gen():
+                yield ""
+            return _gen()
+
+    class FakeAgent:
+        def __init__(self, config):
+            self.config = config
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            return False
+
+        async def chat(self, prompt: str):
+            return FakeResponse()
+
+    import google.antigravity as agy
+    monkeypatch.setattr(agy, "Agent", FakeAgent)
+
+    cb = CircuitBreaker(max_steps=8, max_cost_usd=0.25)
+    worker = AntigravityWorkerAdapter(role="Coder")
+
+    with pytest.raises(CircuitBreakerTrippedError) as exc_info:
+        worker.execute_live_sdk_step(
+            prompt="Looping prompt",
+            circuit_breaker=cb,
+            api_key="AIzaFakeKey123",
+        )
+
+    assert exc_info.value.status == CircuitStatus.TRIPPED_OSCILLATION
+

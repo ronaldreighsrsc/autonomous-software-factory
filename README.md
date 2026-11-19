@@ -6,7 +6,7 @@
 [![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
 [![Pydantic v2](https://img.shields.io/badge/data_contracts-pydantic_v2-e92063.svg?style=flat-square&logo=pydantic&logoColor=white)](https://docs.pydantic.dev/)
 [![SQLite WAL](https://img.shields.io/badge/storage-SQLite_WAL-003B57.svg?style=flat-square&logo=sqlite&logoColor=white)](https://www.sqlite.org/wal.html)
-[![Tests Passing](https://img.shields.io/badge/tests-31%20passed%20(100%25)-success.svg?style=flat-square&logo=pytest&logoColor=white)](https://pytest.org/)
+[![Tests Passing](https://img.shields.io/badge/tests-33%20passed%20(100%25)-success.svg?style=flat-square&logo=pytest&logoColor=white)](https://pytest.org/)
 [![Control Theory](https://img.shields.io/badge/architecture-Closed--Loop_FSM-7928CA.svg?style=flat-square)](https://github.com/ronaldreighsrsc/autonomous-software-factory)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg?style=flat-square)](LICENSE)
 
@@ -113,6 +113,18 @@ Rather than in-memory volatile state, every transition generates a strongly type
 restored_snapshot = checkpointer.rollback_to("snap-step1")
 ```
 
+### 4. Live Google Antigravity SDK Stream Interception (`google-antigravity v0.1.23+`)
+`AntigravityWorkerAdapter` supports both deterministic offline simulation (`execute_agent_step`) and live execution against the official **Google Antigravity Python SDK** (`execute_live_sdk_step`), intercepting `response.thoughts` and `response.tool_calls` in real time before runaway loops can occur:
+```python
+async with agy.Agent(config) as agent:
+    response = await agent.chat(prompt)
+    async for thought in response.thoughts:
+        circuit_breaker.record_thought(f"[{self.role}] {thought}")
+    async for call in response.tool_calls:
+        circuit_breaker.verify_safety(call.name, call.args)  # SHA-256 anti-oscillation guard
+        circuit_breaker.record_step()
+```
+
 ---
 
 ## 📜 Formal EARS Specification
@@ -188,8 +200,8 @@ The codebase is engineered strictly via **Test-Driven Development (TDD)** with 1
 py -m pytest tests -q
 ```
 ```text
-...............................                                          [100%]
-31 passed in 1.49s
+.................................                                        [100%]
+33 passed in 1.52s
 ```
 
 * **Domain & Pydantic v2 Contracts:** 4 unit tests (`test_domain_models.py`)
@@ -197,7 +209,7 @@ py -m pytest tests -q
 * **Deterministic Oracle & Reflexion:** 3 unit tests (`test_oracle.py`)
 * **StateGraph Finite State Machine:** 6 unit tests (`test_state_engine.py`)
 * **SQLite WAL & Time-Travel Debugging:** 4 unit tests (`test_checkpoint_service.py`)
-* **Factory Orchestrator Integration:** 4 integration tests (`test_orchestrator.py`)
+* **Factory Orchestrator & Live Antigravity SDK Adapter:** 6 integration tests (`test_orchestrator.py`)
 * **Typer / Rich CLI Interface:** 4 integration tests (`test_cli.py`)
 
 ---
